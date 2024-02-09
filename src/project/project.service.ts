@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Project } from './schemas/project.schema';
@@ -13,8 +13,22 @@ export class ProjectService {
         @InjectModel(User.name) private readonly userModel: Model<User>,
       ) {}
     
+    
+    async findAll(): Promise<Project[]> {
+        return await this.projectModel.find().exec();
+    }
 
-    async create(projectDto: ProjectDto) : Promise<ProjectDto> {
+    async findById(projectId: string): Promise<Project> {
+        const project = await this.projectModel.findById(projectId).exec();
+    
+        if (!project) {
+          throw new NotFoundException(`Project with ID ${projectId} not found`);
+        }
+    
+        return project;
+      }
+
+    async create(projectDto: ProjectDto) : Promise<Project> {
 
         const {clientName, name, startDate, endDate, progress} = projectDto;
 
@@ -67,9 +81,18 @@ export class ProjectService {
             throw new NotFoundException(`Developer with ID ${developerId} not found or is not a Developer`);
         }
 
+        const developerExists = project.developers.some(dev => dev.equals(developer._id));
+
+        if(developerExists) {
+            throw new ConflictException(`Developer with ID ${developerId} is already added to the project`);
+        }
+
+
         project.developers.push(developer);
         
-        return await project.save();
+        const savedProject =  await project.save();
+
+        return savedProject
     }
 
 
@@ -81,9 +104,16 @@ export class ProjectService {
             throw new NotFoundException(`Project with ID ${projectId} not found`)
         }
 
-        project.developers = project.developers.filter(developer => developer.id != developerId);
+        const developerIndex = project.developers.findIndex(dev => dev._id == developerId);
 
-        return await project.save()
+        if (developerIndex !== -1) {
+          project.developers.splice(developerIndex, 1);
+          await project.save();
+        } else {
+          throw new NotFoundException(`Developer with ID ${developerId} not found in the project`);
+        }
+
+        return project;
     }
 
 }

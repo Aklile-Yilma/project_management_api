@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
@@ -20,6 +20,12 @@ export class AuthService {
     async signup(signupDto: SignupDto): Promise<{token: string}> {
 
         const {name, email, password, contactInfo, role} = signupDto;
+
+        const existingUser = await this.userModel.findOne({email});
+
+        if(existingUser) {
+            throw new ConflictException('Email is already in use');
+        }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 

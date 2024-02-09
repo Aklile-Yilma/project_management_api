@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsDate, IsDateString, IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 
 export class ProjectDto {
@@ -11,10 +11,10 @@ export class ProjectDto {
     @IsString()
     readonly clientName: string;
 
-    @IsDate()
+    @IsDateString()
     readonly startDate: Date;
 
-    @IsDate()
+    @IsDateString()
     readonly endDate: Date;
 
     @IsNumber()

@@ -11,7 +11,8 @@ async function bootstrap() {
   .setTitle('Project Management API')
   .setDescription('Project Management API description')
   .setVersion('1.0')
-  .addTag('project')
+  .addTag('auth')
+  .addTag('projects')
   .build();
 
   const document = SwaggerModule.createDocument(app, config);
