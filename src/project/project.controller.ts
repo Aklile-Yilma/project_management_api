@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post, Param, NotFoundException, Delete, BadRequestException, Get } from '@nestjs/common';
+import { Body, Controller, Patch, Post, Param, NotFoundException, Delete, BadRequestException, Get, UseGuards } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { ProjectDto } from './dto/project.dto';
 import { DeveloperDto } from './dto/developer.dto';
@@ -7,9 +7,14 @@ import { ProjectUpdateDto } from './dto/project-update.dto';
 import { ProjectResponseDto } from './dto/project-response.dto';
 import { plainToClass } from 'class-transformer';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.gaurd';
+import { Roles } from 'src/auth/roles.decorator';
+import { UserRole } from 'src/auth/schemas/user.schema';
 
 @ApiTags('projects')
 @Controller('projects')
+// @UseGuards(AuthGuard())
+@UseGuards(AuthGuard)
 export class ProjectController {
 
     constructor (private projectService: ProjectService) {}
@@ -19,9 +24,12 @@ export class ProjectController {
     async findAll(): Promise<ProjectResponseDto[]>  {
         const projects = await this.projectService.findAll();
 
-        const projectResponse = plainToClass(ProjectResponseDto, projects, {excludeExtraneousValues: true});
+        const projectResponse = projects.map((project) => {
+            return plainToClass(ProjectResponseDto, project, {excludeExtraneousValues: true});
 
-        return projectResponse
+        })
+                
+        return projectResponse;
     }
 
     @Get(':id')
@@ -45,7 +53,8 @@ export class ProjectController {
         return projectResponse
     }
 
-    @Patch(":id/updateProgress")
+    @Patch(":id/update-progress")
+    @Roles(UserRole.ADMIN)
     async updateProgress(@Param('id') projectId: string, @Body() projectDto: ProjectUpdateDto) {
 
         if(!projectDto.progress == undefined) {

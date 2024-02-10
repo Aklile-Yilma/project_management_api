@@ -4,7 +4,7 @@ import { User } from "src/auth/schemas/user.schema";
 
 
 @Schema()
-export class Project  {
+export class Project extends Document  {
 
     @Prop()
     name: string;

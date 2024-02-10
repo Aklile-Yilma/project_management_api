@@ -19,8 +19,8 @@ export class ProjectService {
     }
 
     async findById(projectId: string): Promise<Project> {
-        const project = await this.projectModel.findById(projectId).exec();
-    
+        const project = await this.projectModel.findById(projectId);
+        
         if (!project) {
           throw new NotFoundException(`Project with ID ${projectId} not found`);
         }
