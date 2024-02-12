@@ -9,6 +9,7 @@ export enum UserRole {
 
 @Schema()
 export class User extends Document{
+
     
     @Prop()
     name: string;

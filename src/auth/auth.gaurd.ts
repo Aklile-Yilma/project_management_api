@@ -16,7 +16,7 @@ import {
       const token = this.extractTokenFromHeader(request);
 
       if (!token) {
-        throw new UnauthorizedException();
+        throw new UnauthorizedException("Please Login to continue!");
       }
       try {
         const payload = await this.jwtService.verifyAsync(
@@ -28,13 +28,12 @@ import {
 
         request['user'] = payload;
       } catch {
-        throw new UnauthorizedException();
+        throw new UnauthorizedException("Token is InValid!");
       }
       return true;
     }
   
     private extractTokenFromHeader(request: Request): string | undefined {
-        console.log("here here here", request.headers)
       const [type, token] = request.headers.authorization?.split(' ') ?? [];
       return type === 'Bearer' ? token : undefined;
     }

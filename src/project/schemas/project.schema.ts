@@ -1,10 +1,13 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document, Schema as MongooseSchema } from "mongoose";
+import { Document, Schema as MongooseSchema, SchemaTypes } from "mongoose";
 import { User } from "src/auth/schemas/user.schema";
 
 
 @Schema()
 export class Project extends Document  {
+
+    @Prop({unique: true})
+    _id: string;
 
     @Prop()
     name: string;

@@ -4,7 +4,7 @@ import { UserResponseDto } from "src/auth/dto/user-response.dto";
 export class ProjectResponseDto {
 
     @Expose()
-    _id: string;
+    id: string;
 
     @Expose()
     name: string;

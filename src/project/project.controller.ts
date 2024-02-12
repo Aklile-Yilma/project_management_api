@@ -6,14 +6,15 @@ import { Project } from './schemas/project.schema';
 import { ProjectUpdateDto } from './dto/project-update.dto';
 import { ProjectResponseDto } from './dto/project-response.dto';
 import { plainToClass } from 'class-transformer';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.gaurd';
 import { Roles } from 'src/auth/roles.decorator';
 import { UserRole } from 'src/auth/schemas/user.schema';
+import { RolesGuard } from 'src/auth/roles.gaurd';
 
+@ApiBearerAuth()
 @ApiTags('projects')
 @Controller('projects')
-// @UseGuards(AuthGuard())
 @UseGuards(AuthGuard)
 export class ProjectController {
 
@@ -55,6 +56,7 @@ export class ProjectController {
 
     @Patch(":id/update-progress")
     @Roles(UserRole.ADMIN)
+    @UseGuards(RolesGuard)
     async updateProgress(@Param('id') projectId: string, @Body() projectDto: ProjectUpdateDto) {
 
         if(!projectDto.progress == undefined) {

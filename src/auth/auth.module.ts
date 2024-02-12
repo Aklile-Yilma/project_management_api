@@ -31,7 +31,7 @@ import { RolesGuard } from './roles.gaurd';
 
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, AuthGuard, RolesGuard],
-  exports: [JwtStrategy, PassportModule, MongooseModule],
+  providers: [AuthService, AuthGuard, RolesGuard],
+  exports: [MongooseModule],
 })
 export class AuthModule {}

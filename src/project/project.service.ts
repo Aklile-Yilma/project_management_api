@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { Project } from './schemas/project.schema';
 import { ProjectDto } from './dto/project.dto';
 import { User } from 'src/auth/schemas/user.schema';
+import { v4 as uuidv4 } from "uuid";
 
 @Injectable()
 export class ProjectService {
@@ -33,6 +34,7 @@ export class ProjectService {
         const {clientName, name, startDate, endDate, progress} = projectDto;
 
         const project = await this.projectModel.create({
+            _id: uuidv4(),
             clientName,
             name, 
             startDate,
