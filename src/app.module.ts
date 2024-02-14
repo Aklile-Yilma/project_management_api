@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { ProjectModule } from './project/project.module';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { ProjectModule } from './project/project.module';
       dbName: 'project_mang_db'
     }),
     AuthModule,
-    ProjectModule
+    ProjectModule,
+    ProfileModule
   ],
   controllers: [AppController],
   providers: [AppService],
