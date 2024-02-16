@@ -6,8 +6,8 @@ import { User } from "src/auth/schemas/user.schema";
 @Schema()
 export class Project extends Document  {
 
-    @Prop({unique: true})
-    _id: string;
+    // @Prop({unique: true})
+    // _id: string;
 
     @Prop()
     name: string;
