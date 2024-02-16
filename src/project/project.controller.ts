@@ -25,6 +25,7 @@ export class ProjectController {
     async findAll(): Promise<ProjectResponseDto[]>  {
         const projects = await this.projectService.findAll();
 
+        console.log("project", projects)
         const projectResponse = projects.map((project) => {
             return plainToClass(ProjectResponseDto, project, {excludeExtraneousValues: true});
 

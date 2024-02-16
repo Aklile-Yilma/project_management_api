@@ -22,11 +22,11 @@ export class ProjectService {
       
     
     async findAll(): Promise<Project[]> {
-        return await this.projectModel.find().exec();
+        return await this.projectModel.find().populate('developers').exec();
     }
 
     async findById(projectId: string): Promise<Project> {
-        const project = await this.projectModel.findById(projectId);
+        const project = await this.projectModel.findById(projectId).populate('developers').exec();
         
         if (!project) {
           throw new NotFoundException(`Project with ID ${projectId} not found`);
@@ -40,7 +40,7 @@ export class ProjectService {
         const {clientName, name, startDate, endDate, progress} = projectDto;
 
         const project = await this.projectModel.create({
-            _id: uuidv4(),
+            // _id: uuidv4(),
             clientName,
             name, 
             startDate,
@@ -57,7 +57,7 @@ export class ProjectService {
             projectId, 
             {progress: newProgress},
             {new: true}
-        )
+        ).populate('developers').exec()
 
         return project;
     }
@@ -77,7 +77,7 @@ export class ProjectService {
 
     async addDeveloper(projectId: string, developerId: string) {
 
-        const project = await this.projectModel.findById(projectId);
+        const project = await this.projectModel.findById(projectId).populate('developers').exec();
 
         if(!project) {
             throw new NotFoundException(`Project with ID ${projectId} not found`)
@@ -106,7 +106,7 @@ export class ProjectService {
 
     async removeDeveloper(projectId: string, developerId: string) {
 
-        const project = await this.projectModel.findById(projectId);
+        const project = await this.projectModel.findById(projectId).populate('developers').exec();
 
         if(!project) {
             throw new NotFoundException(`Project with ID ${projectId} not found`)
